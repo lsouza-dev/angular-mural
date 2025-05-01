@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Pensamento } from './Pensamento';
-import { Observable, map } from 'rxjs';
+import { Observable, firstValueFrom, map } from 'rxjs';
 import { PensamentoPaginado } from './PensamentoPaginado';
 
 @Injectable({
@@ -32,8 +32,8 @@ export class PensamentoService {
     return this.http.put<Pensamento>(url, pensamento);
   }
 
-  buscarPensamentoPorId = (id: number): Observable<Pensamento> => {
+  buscarPensamentoPorId = async (id: number): Promise<Pensamento> => {
     const url = `${this.API}/${id}`;
-    return this.http.get<Pensamento>(url);
-  }
+    return await firstValueFrom(this.http.get<Pensamento>(url));
+  };
 }

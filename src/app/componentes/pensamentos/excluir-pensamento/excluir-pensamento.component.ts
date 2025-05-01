@@ -23,14 +23,22 @@ export class ExcluirPensamentoComponent implements OnInit {
     private route: ActivatedRoute
   ) { }
 
-  ngOnInit(): void {
+  async ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id')
-    this.service.buscarPensamentoPorId(Number(id))
-      .subscribe((pensamento) => {
-        this.pensamento = pensamento;
-      })
+    try {
+      const pensamento = await this.service.buscarPensamentoPorId(Number(id))
+      if (pensamento != null)
+        this.pensamento = pensamento
+      else
+        alert("Pensamento nulo")
+    } catch (erro: any) {
+      if (erro.error && erro.error.message) {
+        alert(erro.error.message);
+      } else {
+        alert("Erro inesperado");
+      }
+    }
   }
-
   excluirPensamento = () => {
     if (this.pensamento.id) {
 
