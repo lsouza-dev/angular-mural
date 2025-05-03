@@ -36,9 +36,9 @@ export class ListarPensamentosComponent implements OnInit {
 
   buscarPensamentosPorTrecho = async () => {
     this.haMaisPensamentosParent =  true;
-    this,this.paginaAtual = 1;
+    this.paginaAtual = 0;
 
-    this.service.listarPensamentos(this.paginaAtual,this.filtro)
+    await this.service.listarPensamentos(this.paginaAtual,this.filtro)
       .subscribe({
         next: (pensamentos) => {
           this.listaPensamentos = pensamentos;
@@ -49,10 +49,11 @@ export class ListarPensamentosComponent implements OnInit {
 
           else
             alert("Um erro inesperado aconteceu.");
+        },
+        complete: () => {
+          console.log(this.listaPensamentos)
         }
       })
     
   }
-
-
 }

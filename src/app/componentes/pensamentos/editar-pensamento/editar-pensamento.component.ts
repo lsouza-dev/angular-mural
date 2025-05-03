@@ -16,7 +16,8 @@ export class EditarPensamentoComponent implements OnInit {
     id: 0,
     conteudo: '',
     autoria: '',
-    modelo: ''
+    modelo: '',
+    favorito: false
   }
 
   formulario!: FormGroup
@@ -57,7 +58,8 @@ export class EditarPensamentoComponent implements OnInit {
           Validators.required,
           Validators.maxLength(10)
         ]
-      ]
+      ],
+      favorito: [this.pensamento.favorito]
     })
     
     const id = Number(this.route.snapshot.paramMap.get('id'));

@@ -44,7 +44,8 @@ export class CriarPensamentosComponent implements OnInit {
           Validators.required,
           Validators.maxLength(10)
         ]
-      ]
+      ],
+      favorito: [false]
     })
   }
 

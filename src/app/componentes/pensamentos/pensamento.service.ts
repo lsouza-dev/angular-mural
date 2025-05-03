@@ -9,7 +9,7 @@ import { PensamentoPaginado } from './PensamentoPaginado';
 })
 export class PensamentoService {
 
-  private readonly API = 'http://localhost:8080/mural'
+  private readonly API = 'http://localhost:8080/pensamentos'
 
   constructor(private http: HttpClient) { }
 
@@ -20,7 +20,7 @@ export class PensamentoService {
       HttpParams()
         .set("page",pagina)
         .set("size",itensPorPagina)
-        .set("trecho",trecho)
+        .set("trecho",trecho.trim())
 
     const url = `${this.API}/listar`
     
@@ -46,5 +46,10 @@ export class PensamentoService {
     const url = `${this.API}/${id}`;
     return await firstValueFrom(this.http.get<Pensamento>(url));
   };
+
+  atualizarFavorito = (id:number): Observable<Pensamento> => {
+    const url = `${this.API}/favoritar/${id}`
+    return this.http.put<Pensamento>(url,{});
+  }
 
 }
