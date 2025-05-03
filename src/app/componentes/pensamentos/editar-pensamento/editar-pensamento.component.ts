@@ -72,27 +72,32 @@ export class EditarPensamentoComponent implements OnInit {
           'autoria': this.pensamento.autoria,
           'modelo': this.pensamento.modelo
         })
-        console.log(this.formulario)
       } else {
         console.log("Pensamento nulo");
       }
     } catch (erro: any) {
       if (erro.error && erro.error.message) {
-        alert(erro.error.message);
+        alert(erro.error.message); 
       } else {
         alert("Erro inesperado");
       }
     }
   }
 
-  editarPensamento = () => {
-    console.log(this.formulario.get('autoria')?.errors)
+  editarPensamento = async () => {
     if (this.pensamento.id && this.formulario.valid) {
-      try {
+      
+      this.pensamento = {
+        ...this.pensamento,
+        ...this.formulario.value  
+      }
 
-        this.service.atualizarPensamento(this.pensamento)
+      try {
+        console.log("Formulário válido... Atualizndo")
+        await this.service.atualizarPensamento(this.pensamento)
           .subscribe({
-            next: () => {
+            next: (pensamento:Pensamento) => {
+              console.log(pensamento)
               this.router.navigate(['/listarPensamento'])
             },
             error: (erro) => {
@@ -101,6 +106,9 @@ export class EditarPensamentoComponent implements OnInit {
 
               else alert
                 ('Erro inesperado. Tente novamente mais tarde.');
+            },
+            complete: () =>{
+              console.log(this.pensamento);
             }
           })
       } catch (e) {

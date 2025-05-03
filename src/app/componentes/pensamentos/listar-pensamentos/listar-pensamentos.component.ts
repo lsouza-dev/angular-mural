@@ -1,6 +1,7 @@
 import { Pensamento } from '../Pensamento';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { PensamentoService } from '../pensamento.service';
+import { map, pipe } from 'rxjs';
 
 @Component({
   selector: 'app-listar-pensamentos',
@@ -10,13 +11,47 @@ import { PensamentoService } from '../pensamento.service';
 export class ListarPensamentosComponent implements OnInit {
 
   listaPensamentos: Pensamento[] = []
+  paginaAtual:number = 0;
+  haMaisPensamentosParent:boolean = true;
+  filtro:string = "";
+
   constructor(private service:PensamentoService) { }
 
-  ngOnInit(): void {
-    this.service.listarPensamentos().subscribe((listaPensamentos) => {
-      console.log(listaPensamentos);
-      this.listaPensamentos = listaPensamentos;
-    });
+  async ngOnInit() {
+    await this.service.listarPensamentos(this.paginaAtual,this.filtro)
+      .subscribe((listaPensamentos) => {
+        this.listaPensamentos = listaPensamentos;
+      });
+  }
+
+  carregarMaisPensamentos = async () => {
+    await this.service.listarPensamentos(++this.paginaAtual,this.filtro)
+    .subscribe((listaPensamentos) => {
+      this.listaPensamentos.push(...listaPensamentos)
+      if(!listaPensamentos.length)
+          this.haMaisPensamentosParent = false;
+    })
+
+  }
+
+  buscarPensamentosPorTrecho = async () => {
+    this.haMaisPensamentosParent =  true;
+    this,this.paginaAtual = 1;
+
+    this.service.listarPensamentos(this.paginaAtual,this.filtro)
+      .subscribe({
+        next: (pensamentos) => {
+          this.listaPensamentos = pensamentos;
+        },
+        error: (erro) => {
+          if (erro.error && erro.error.message)
+            alert(erro.error.message);
+
+          else
+            alert("Um erro inesperado aconteceu.");
+        }
+      })
+    
   }
 
 

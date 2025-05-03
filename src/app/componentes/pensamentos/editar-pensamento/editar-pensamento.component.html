@@ -5,7 +5,7 @@
     <form [formGroup]="formulario">
         <label for="pensamento">Pensamento</label>
         <input type="textarea" class="input" id="pensamento" formControlName="conteudo"
-            placeholder="Digite o pensamento" maxlength="250" [value]="pensamento.conteudo">
+            placeholder="Digite o pensamento" maxlength="250" >
         <div class="mensagem__erro" *ngIf="formulario.get('conteudo')?.errors?.['required'] && formulario.get('conteudo')?.touched">
             Pensamento é obrigatório!
         </div>

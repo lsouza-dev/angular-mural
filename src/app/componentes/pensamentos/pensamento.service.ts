@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Pensamento } from './Pensamento';
 import { Observable, firstValueFrom, map } from 'rxjs';
 import { PensamentoPaginado } from './PensamentoPaginado';
@@ -13,9 +13,19 @@ export class PensamentoService {
 
   constructor(private http: HttpClient) { }
 
-  listarPensamentos = (): Observable<Pensamento[]> => {
-    return this.http.get<PensamentoPaginado>(this.API + '/listar')
-      .pipe(map(response => response.content));
+  listarPensamentos = (pagina:number,trecho:string): Observable<Pensamento[]> => {
+    const itensPorPagina = 4;
+
+    let params = new 
+      HttpParams()
+        .set("page",pagina)
+        .set("size",itensPorPagina)
+        .set("trecho",trecho)
+
+    const url = `${this.API}/listar`
+    
+    return this.http.get<PensamentoPaginado>(url,{params})
+      .pipe(map(response => response.content))
   }
 
   criarPensamento = (pensamento: Pensamento): Observable<Pensamento> => {
@@ -36,4 +46,5 @@ export class PensamentoService {
     const url = `${this.API}/${id}`;
     return await firstValueFrom(this.http.get<Pensamento>(url));
   };
+
 }
