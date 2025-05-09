@@ -52,4 +52,19 @@ export class PensamentoService {
     return this.http.put<Pensamento>(url,{});
   }
 
+  listarFavoritos = (pagina:number, trecho:string) : Observable<Pensamento[]> => {
+    const itensPorPagina = 4;
+
+    let params = new 
+      HttpParams()
+        .set("page",pagina)
+        .set("size",itensPorPagina)
+        .set("trecho",trecho.trim())
+
+    const url = `${this.API}/listar/favoritos`
+    
+    return this.http.get<PensamentoPaginado>(url,{params})
+      .pipe(map(response => response.content))
+  }
+
 }
